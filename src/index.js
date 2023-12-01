@@ -8,7 +8,7 @@ export const handler = (event) => {
             ?? event?.directive?.payload?.scope?.token
             ?? process.env.AHC_HOMEASSISTANT_TOKEN;
 
-        console.log('Request', token, JSON.stringify(event));
+        //console.log('Request', token, JSON.stringify(event));
 
         const request = https.request(
             {
@@ -28,14 +28,13 @@ export const handler = (event) => {
                 response.setEncoding('utf8');
                 response.on('data', (chunk) => body += chunk);
                 response.on('end', () => {
-                    console.log('Response', JSON.stringify({
-                        isBase64Encoded: false,
-                        statusCode:      response.statusCode || 500,
-                        headers:         response.headers,
-                        body,
-                    }));
+                    //console.log('Response', JSON.stringify({
+                    //    isBase64Encoded: false,
+                    //    statusCode:      response.statusCode || 500,
+                    //    headers:         response.headers,
+                    //    body,
+                    //}));
 
-                    body = JSON.parse(body);
                     if (response.status >= 400) {
                         return reject({
                             event: {
@@ -47,7 +46,7 @@ export const handler = (event) => {
                         });
                     }
 
-                    resolve(body);
+                    resolve(JSON.parse(body));
                 });
             }
         );
