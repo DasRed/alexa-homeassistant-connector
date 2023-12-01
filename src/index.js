@@ -23,13 +23,14 @@ export const handler = (event) => {
                 response.setEncoding('utf8');
                 response.on('data', (chunk) => body += chunk);
                 response.on('end', () => {
-                    body = JSON.parse(body);
                     console.log('Response', JSON.stringify({
                         isBase64Encoded: false,
                         statusCode:      response.statusCode || 500,
                         headers:         response.headers,
                         body,
                     }));
+
+                    body = JSON.parse(body);
                     if (response.status >= 400) {
                         return reject({
                             event: {
