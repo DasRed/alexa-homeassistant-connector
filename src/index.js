@@ -2,6 +2,7 @@ import https from 'https';
 
 export const handler = (event) => {
     return new Promise((resolve, reject) => {
+        console.log('Request', JSON.stringify(event));
         const token = event?.directive?.endpoint?.scope?.token ?? event?.directive?.payload?.grantee?.token ?? event?.directive?.payload?.grantee?.scope ?? process.env.AHC_HOMEASSISTANT_TOKEN;
 
         const request = https.request(
@@ -23,6 +24,12 @@ export const handler = (event) => {
                 response.on('data', (chunk) => body += chunk);
                 response.on('end', () => {
                     body = JSON.parse(body);
+                    console.log('Response', JSON.stringify({
+                        isBase64Encoded: false,
+                        statusCode:      response.statusCode || 500,
+                        headers:         response.headers,
+                        body,
+                    }));
                     if (response.status >= 400) {
                         return reject({
                             event: {
