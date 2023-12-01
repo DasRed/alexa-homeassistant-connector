@@ -2,8 +2,13 @@ import https from 'https';
 
 export const handler = (event) => {
     return new Promise((resolve, reject) => {
-        console.log('Request', JSON.stringify(event));
-        const token = event?.directive?.endpoint?.scope?.token ?? event?.directive?.payload?.grantee?.token ?? event?.directive?.payload?.grantee?.scope ?? process.env.AHC_HOMEASSISTANT_TOKEN;
+        const token = event?.directive?.endpoint?.scope?.token
+            ?? event?.directive?.payload?.grantee?.token
+            ?? event?.directive?.payload?.grantee?.scope?.token
+            ?? event?.directive?.payload?.scope?.token
+            ?? process.env.AHC_HOMEASSISTANT_TOKEN;
+
+        console.log('Request', token, JSON.stringify(event));
 
         const request = https.request(
             {
